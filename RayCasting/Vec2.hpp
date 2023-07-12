@@ -38,7 +38,7 @@ struct intersectionOutput {
     bool valid;
 };
 
-intersectionOutput intersectionCheck(
+intersectionOutput checkIntersection(
     const Vec2& a, const Vec2& b, const Vec2& c, const Vec2& d);
 
 

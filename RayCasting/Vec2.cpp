@@ -101,7 +101,7 @@ sf::Vector2f Vec2::toVec2f() {
 }
 
 
-intersectionOutput intersectionCheck(
+intersectionOutput checkIntersection(
     const Vec2& a, const Vec2& b, const Vec2& c, const Vec2& d) {
     // Check if a linesegment from a to b and a linesegment from c to d intersects
     // Find t and u such that "a + t(b-a) = c + u(d-c)" and "both t and u are between 0 and 1"
