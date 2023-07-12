@@ -58,31 +58,62 @@ class Scene1 : public Scene {
 	
 public:
 	void init() override {
-
+		// Make quad blocks
 		auto vertexArray = createSquareVertices(100.f, 100.f);
+
 		auto entity = m_entityManager->addEntity();
 		auto cRender = entity->addComponent<CRender>(vertexArray);
+		cRender->vertexArray[3] = sf::Vector2f(90, 20);
 		cRender->states.transform.translate(100.f, 100.f);
-		entity = m_entityManager->addEntity();
-		cRender = entity->addComponent<CRender>(vertexArray);
-		cRender->states.transform.translate(200.f, 300.f);
-		entity = m_entityManager->addEntity();
-		cRender = entity->addComponent<CRender>(vertexArray);
-		cRender->states.transform.translate(400.f, 500.f);
-		entity = m_entityManager->addEntity();
-		cRender = entity->addComponent<CRender>(vertexArray);
-		cRender->states.transform.translate(700.f, 300.f);
 
+		entity = m_entityManager->addEntity();
+		cRender = entity->addComponent<CRender>(vertexArray);
+		cRender->vertexArray[1] = sf::Vector2f(90, 0);
+		cRender->states.transform.translate(200.f, 300.f);
+
+		entity = m_entityManager->addEntity();
+		cRender = entity->addComponent<CRender>(vertexArray);
+		cRender->vertexArray[0] = sf::Vector2f(-90, -90);
+		cRender->states.transform.translate(400.f, 500.f);
+
+		entity = m_entityManager->addEntity();
+		cRender = entity->addComponent<CRender>(vertexArray);
+		cRender->vertexArray[2] = sf::Vector2f(90, 20);
+		cRender->states.transform.translate(900.f, 300.f);
+
+		entity = m_entityManager->addEntity();
+		cRender = entity->addComponent<CRender>(vertexArray);
+		cRender->vertexArray[3] = sf::Vector2f(90, 90);
+		cRender->vertexArray[1] = sf::Vector2f(60, 0);
+		cRender->states.transform.translate(300.f, 100.f);
+
+		entity = m_entityManager->addEntity();
+		cRender = entity->addComponent<CRender>(vertexArray);
+		cRender->vertexArray[0] = sf::Vector2f(-90, -90);
+		cRender->vertexArray[3] = sf::Vector2f(90, 120);
+		cRender->states.transform.translate(600.f, 150.f);
+		cRender->states.transform.rotate(90);
+
+
+		// Make the boundary
 		auto boundaryVA = createBoundary();
 		entity = m_entityManager->addEntity();
 		cRender = entity->addComponent<CRender>(boundaryVA);
 		
-
+		// Make a raycaster
 		entity = m_entityManager->addEntity();
 		auto circleVA = createCircleVertices(30, 10.f);
 		cRender = entity->addComponent<CRender>(circleVA);
 		cRender->states.transform.translate(GameConfig::instance().windowWidth / 2.f, GameConfig::instance().widowHeight / 2.f);
 		entity->addComponent<CRayCast>(true);
+
+		// Make a circle block
+		entity = m_entityManager->addEntity();
+		circleVA = createCircleVertices(30, 50.f);
+		cRender = entity->addComponent<CRender>(circleVA);
+		cRender->states.transform.translate(800, 500);
+
+
 
 	}
 };
