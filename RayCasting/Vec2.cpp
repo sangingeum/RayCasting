@@ -50,9 +50,36 @@ Vec2& Vec2::scale(float s) {
     return *this;
 }
 Vec2& Vec2::rotate(float degree) {
-    // TODO
+    float radian = degree * (3.141592653589793f / 180.0f);
+    float cosine = std::cos(radian);
+    float sine = std::sin(radian);
+    float newX = x * cosine - y * sine;
+    float newY = x * sine + y * cosine;
+    x = newX;
+    y = newY;
     return *this;
 }
+
+Vec2 Vec2::rotate_(float degree) const {
+    float radian = degree * (3.141592653589793f / 180.0f);
+    float cosine = std::cos(radian);
+    float sine = std::sin(radian);
+    float newX = x * cosine - y * sine;
+    float newY = x * sine + y * cosine;
+    return Vec2(newX, newY);
+}
+
+Vec2& Vec2::rotate(const Vec2& origin, float degree) {
+    *this -= origin;
+    rotate(degree);
+    *this += origin;
+    return *this;
+}
+
+Vec2 Vec2::rotate_(const Vec2& origin, float degree) const {
+    return (*this - origin).rotate_(degree) + origin;
+}
+
 Vec2& Vec2::normalize() {
     float len = length();
     x /= len;
@@ -78,7 +105,9 @@ float Vec2::dist(const Vec2& v) const {
 float Vec2::cross(const Vec2& v) const {
     return x * v.y - y * v.x;
 }
-
+float Vec2::dot(const Vec2& v) const {
+    return x * v.x + y * v.y;
+}
 Vec2 Vec2::delta(const Vec2& v) const {
     return Vec2({ abs(this->x - v.x), abs(this->y - v.y) });
 }

@@ -21,11 +21,15 @@ public:
 class CRayCast
 {
 public:
-	bool toMouse = false;
 	size_t numRays = 10;
 	float rayLength = 4000;
-	CRayCast(size_t numRays_) : numRays(numRays_), toMouse(false){}
-	CRayCast(bool toMouse_) : toMouse(toMouse_) {}
+	bool toMouse = false;
+	bool drawTriangle = false;
+	bool drawRay = false;
+	bool sweep = false;
+	CRayCast(size_t numRays_, bool drawTriangle_, bool drawRay_, bool sweep_)
+		: numRays(numRays_), toMouse(false), drawTriangle(drawTriangle_), drawRay(drawRay_), sweep(sweep_){}
+	CRayCast() : toMouse(true) {}
 };
 
 class CFlollowCursor

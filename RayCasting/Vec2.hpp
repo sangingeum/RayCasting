@@ -20,11 +20,15 @@ public:
     Vec2& add(const Vec2& rhs);
     Vec2& scale(float s);
     Vec2& rotate(float degree);
+    Vec2 rotate_(float degree) const;
+    Vec2& rotate(const Vec2& origin, float degree);
+    Vec2 rotate_(const Vec2& origin, float degree) const; 
     Vec2& normalize();
     Vec2& resize(float length);
     Vec2& decreaseUntilZero(float diff);
     float dist(const Vec2& v) const;
     float cross(const Vec2& v) const;
+    float dot(const Vec2& v) const;
     Vec2 delta(const Vec2& v) const;
     float length() const;
     void set(float xin, float yin);
