@@ -7,7 +7,7 @@ class Scene
 protected:
 	std::shared_ptr<EntityManager> m_entityManager;
 	sf::Color m_blockColor = sf::Color::White;
-	const float pi = 3.14159265358979323846f;
+	
 public:
 	virtual ~Scene() = default;
 	Scene() : m_entityManager(std::make_shared<EntityManager>()) {}
@@ -33,6 +33,7 @@ public:
 		sf::VertexArray vertexArray(sf::TriangleFan, numVertices + 2);
 		vertexArray[0].position = sf::Vector2f(0, 0);
 		vertexArray[0].color = m_blockColor;
+		float pi = GameConfig::instance().pi;
 		for (size_t i = 1; i <= numVertices+1; ++i) {
 			float theta = i * 2 * pi / numVertices ;
 			vertexArray[i].position = sf::Vector2f(radius* std::cosf(theta), radius * std::sinf(theta));
@@ -45,19 +46,13 @@ public:
 		sf::VertexArray vertexArray(sf::LineStrip, 4);
 		auto& config = GameConfig::instance();
 		vertexArray[0].position = sf::Vector2f(0, 0);
-		vertexArray[1].position = sf::Vector2f(config.windowWidth, 0);
-		vertexArray[2].position = sf::Vector2f(config.windowWidth, config.widowHeight);
+		vertexArray[1].position = sf::Vector2f(config.windowWidth+1, 0);
+		vertexArray[2].position = sf::Vector2f(config.windowWidth+1, config.widowHeight);
 		vertexArray[3].position = sf::Vector2f(0, config.widowHeight);
 		return vertexArray;
 	}
 
-};
-
-class Scene1 : public Scene {
-
-	
-public:
-	void init() override {
+	void baseInit() {
 		// Make quad blocks
 		auto vertexArray = createSquareVertices(100.f, 100.f);
 
@@ -83,22 +78,36 @@ public:
 
 		entity = m_entityManager->addEntity();
 		cRender = entity->addComponent<CRender>(vertexArray);
-		cRender->vertexArray[3] = sf::Vector2f(90, 90);
+		cRender->vertexArray[3] = sf::Vector2f(-0, 90);
 		cRender->vertexArray[1] = sf::Vector2f(60, 0);
-		cRender->states.transform.translate(300.f, 100.f);
+		cRender->states.transform.translate(300.f, 50.f);
 
 		entity = m_entityManager->addEntity();
 		cRender = entity->addComponent<CRender>(vertexArray);
 		cRender->vertexArray[0] = sf::Vector2f(-90, -90);
 		cRender->vertexArray[3] = sf::Vector2f(90, 120);
 		cRender->states.transform.translate(600.f, 150.f);
-		cRender->states.transform.rotate(90);
+		cRender->states.transform.rotate(110);
 
+		// Make a circle block
+		entity = m_entityManager->addEntity();
+		auto circleVA = createCircleVertices(30, 50.f);
+		cRender = entity->addComponent<CRender>(circleVA);
+		cRender->states.transform.translate(800, 500);
+	}
 
+};
+
+class Scene1 : public Scene {
+
+public:
+	void init() override {
+		
+		baseInit();
 		// Make the boundary
 		auto boundaryVA = createBoundary();
-		entity = m_entityManager->addEntity();
-		cRender = entity->addComponent<CRender>(boundaryVA);
+		auto entity = m_entityManager->addEntity();
+		auto cRender = entity->addComponent<CRender>(boundaryVA);
 		
 		// Make a raycaster
 		entity = m_entityManager->addEntity();
@@ -106,17 +115,29 @@ public:
 		cRender = entity->addComponent<CRender>(circleVA);
 		cRender->states.transform.translate(GameConfig::instance().windowWidth / 2.f, GameConfig::instance().widowHeight / 2.f);
 		entity->addComponent<CRayCast>(true);
-
-		// Make a circle block
-		entity = m_entityManager->addEntity();
-		circleVA = createCircleVertices(30, 50.f);
-		cRender = entity->addComponent<CRender>(circleVA);
-		cRender->states.transform.translate(800, 500);
-
-
-
 	}
 };
 
+
+class Scene2 : public Scene {
+
+public:
+	void init() override {
+
+		baseInit();
+		// Make the boundary
+		auto boundaryVA = createBoundary();
+		auto entity = m_entityManager->addEntity();
+		auto cRender = entity->addComponent<CRender>(boundaryVA);
+
+		// Make a raycaster
+		entity = m_entityManager->addEntity();
+		auto circleVA = createCircleVertices(30, 10.f);
+		cRender = entity->addComponent<CRender>(circleVA);
+		cRender->states.transform.translate(GameConfig::instance().windowWidth / 2.f, GameConfig::instance().widowHeight / 2.f);
+		entity->addComponent<CRayCast>(static_cast<size_t>(30));
+		entity->addComponent<CFlollowCursor>(true);
+	}
+};
 
 
