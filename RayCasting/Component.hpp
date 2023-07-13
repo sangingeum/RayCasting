@@ -24,7 +24,7 @@ public:
 	bool toMouse = false;
 	size_t numRays = 10;
 	float rayLength = 4000;
-	CRayCast(size_t numRays_) : numRays(numRays_) {}
+	CRayCast(size_t numRays_) : numRays(numRays_), toMouse(false){}
 	CRayCast(bool toMouse_) : toMouse(toMouse_) {}
 };
 

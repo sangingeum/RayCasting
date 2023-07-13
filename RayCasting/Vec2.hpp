@@ -29,7 +29,7 @@ public:
     float length() const;
     void set(float xin, float yin);
     void negate();
-    sf::Vector2f toVec2f();
+    sf::Vector2f toVec2f() const;
 };
 
 struct intersectionOutput {

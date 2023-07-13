@@ -96,7 +96,7 @@ void Vec2::negate() {
     y = -y;
 }
 
-sf::Vector2f Vec2::toVec2f() {
+sf::Vector2f Vec2::toVec2f() const {
     return sf::Vector2f(x, y);
 }
 

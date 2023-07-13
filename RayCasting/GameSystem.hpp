@@ -8,9 +8,10 @@ class GameSystem
 	sf::RenderWindow m_window;
 	std::unique_ptr<Scene> m_curScene;
 	
-	std::pair<bool, Vec2> checkAllIntersection(const Vec2& a, const Vec2& b, float minDist) {
 
+	std::pair<bool, Vec2> checkAllIntersection(const Vec2& a, const Vec2& b) {
 		bool intersectionExists = false;
+		float minDist = 100000.f;
 		Vec2 intersection;
 		auto manager = m_curScene->getManager();
 		auto rederables = manager->getEntities(ComponentType::RENDER);
@@ -36,6 +37,23 @@ class GameSystem
 		return { intersectionExists, intersection };
 	}
 
+	void drawRay(const Vec2& a, const Vec2& b) {
+		auto [found, intersection] = checkAllIntersection(a, b);
+		if (found) {
+			sf::VertexArray line(sf::Lines, 2);
+			line[0].position = a.toVec2f();
+			line[1].position = intersection.toVec2f();
+			line[0].color = sf::Color::Red;
+			line[1].color = sf::Color::Red;
+			sf::CircleShape circle(8.f);
+			circle.setOrigin(8.f, 8.f);
+			circle.setPosition(intersection.toVec2f());
+			circle.setFillColor(sf::Color::Red);
+			m_window.draw(line);
+			m_window.draw(circle);
+		}
+	}
+
 	void render() {
 		m_window.clear();
 		// Handler Renderable entities
@@ -55,25 +73,19 @@ class GameSystem
 				auto entityPos = Vec2(cRender->states.transform * sf::Vector2f(0, 0));
 				auto mousePos = Vec2(sf::Mouse::getPosition(m_window));
 				auto directionVec = (mousePos - entityPos).resize(cRayCast->rayLength);
-				auto [found, intersection] = checkAllIntersection(entityPos, entityPos + directionVec, cRayCast->rayLength);
-				if (found) {
-					sf::VertexArray line(sf::Lines, 2);
-					line[0].position = entityPos.toVec2f();
-					line[1].position = intersection.toVec2f();
-					line[0].color = sf::Color::Red;
-					line[1].color = sf::Color::Red;
-					sf::CircleShape circle(8.f);
-					circle.setOrigin(8.f, 8.f);
-					circle.setPosition(intersection.toVec2f());
-					circle.setFillColor(sf::Color::Red);
-					m_window.draw(line);
-					m_window.draw(circle);
-				}
-				
-			
+				drawRay(entityPos, entityPos + directionVec);
 			}
 			else {
-
+				size_t numRays = cRayCast->numRays;
+				auto& config = GameConfig::instance();
+				auto entityPos = Vec2(cRender->states.transform * sf::Vector2f(0, 0));
+				float unitTheta =  2 * config.pi / numRays;
+				float rayLength = cRayCast->rayLength;
+				float theta = 0;
+				for (size_t i = 0; i < numRays; ++i, theta+=unitTheta) {
+					auto directionVec = Vec2(rayLength * std::cosf(theta), rayLength * std::sinf(theta));
+					drawRay(entityPos, entityPos + directionVec);
+				}
 			}
 		}
 
@@ -90,12 +102,7 @@ public:
 		while (m_window.isOpen())
 		{	
 			update();
-			sf::Event event;
-			while (m_window.pollEvent(event))
-			{
-				if (event.type == sf::Event::Closed)
-					m_window.close();
-			}
+			handleUserInput();
 			physics();
 			render();
 		}
@@ -122,6 +129,21 @@ public:
 		m_curScene = std::move(scene);
 		m_curScene->init();
 	}
-
+	void handleUserInput() {
+		sf::Event event;
+		while (m_window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				m_window.close();
+			if (event.type == sf::Event::KeyPressed) {
+				if (event.key.scancode == sf::Keyboard::Scan::Num1) {
+					setScene(std::make_unique<Scene1>());
+				}
+				else if (event.key.scancode == sf::Keyboard::Scan::Num2) {
+					setScene(std::make_unique<Scene2>());
+				}
+			}
+		}
+	}
 };
 

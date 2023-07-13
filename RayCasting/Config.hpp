@@ -15,6 +15,7 @@ public:
 	unsigned frameRate = 144;
 	int windowWidth = 1280;
 	int widowHeight = 720;
+	const float pi = 3.14159265358979323846f;
 };
 
 
