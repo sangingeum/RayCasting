@@ -9,7 +9,6 @@ class GameSystem
 	sf::RenderWindow m_window;
 	std::unique_ptr<Scene> m_curScene;
 	
-
 	std::pair<bool, Vec2> calculateRay(const Vec2& rayFrom, const Vec2& rayTo) {
 		bool intersectionExists = false;
 		float minDist = 100000.f;
@@ -77,7 +76,7 @@ class GameSystem
 			size_t size = vertexArray.getVertexCount();
 			for (size_t i = 0; i < size; ++i) {
 				auto toEdgeVec = (Vec2(transform * vertexArray[i].position) - rayFrom).resize(rayLength);
-				tempVec.push_back(calculateRay(rayFrom, toEdgeVec + rayFrom));
+				//tempVec.push_back(calculateRay(rayFrom, toEdgeVec + rayFrom));
 				tempVec.push_back(calculateRay(rayFrom, toEdgeVec.rotate_(rayFrom, 0.001) + rayFrom));
 				tempVec.push_back(calculateRay(rayFrom, toEdgeVec.rotate_(rayFrom, -0.001) + rayFrom));
 				for (auto& result : tempVec) {
@@ -162,27 +161,10 @@ class GameSystem
 
 		m_window.display();
 	}
-
-public:
-	GameSystem() : m_window(sf::VideoMode(GameConfig::instance().windowWidth, GameConfig::instance().widowHeight), "SFML works!")
-	{	
-		m_window.setFramerateLimit(GameConfig::instance().frameRate);
-		setScene(std::make_unique<Scene1>());
-	}
-	void run() {
-		while (m_window.isOpen())
-		{	
-			update();
-			handleUserInput();
-			physics();
-			render();
-		}
-	}
-
 	void physics() {
 		auto manager = m_curScene->getManager();
 		// Handle mouse following entities
-		auto followers = manager->getEntities(ComponentType::FOLLOWCURSOR);	
+		auto followers = manager->getEntities(ComponentType::FOLLOWCURSOR);
 		for (auto& entity : followers) {
 			auto cFlollow = entity->getComponent<CFlollowCursor>();
 			if (cFlollow->follow) {
@@ -225,5 +207,22 @@ public:
 			}
 		}
 	}
+public:
+	GameSystem() : m_window(sf::VideoMode(GameConfig::instance().windowWidth, GameConfig::instance().widowHeight), GameConfig::instance().windowName.c_str())
+	{	
+		m_window.setFramerateLimit(GameConfig::instance().frameRate);
+		setScene(std::make_unique<Scene1>());
+	}
+	void run() {
+		while (m_window.isOpen())
+		{	
+			update();
+			handleUserInput();
+			physics();
+			render();
+		}
+	}
+
+	
 };
 

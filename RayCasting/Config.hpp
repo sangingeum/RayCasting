@@ -1,5 +1,5 @@
 #pragma once
-
+#include <string>
 // Singleton config
 class GameConfig
 {	
@@ -15,6 +15,7 @@ public:
 	unsigned frameRate = 144;
 	int windowWidth = 1280;
 	int widowHeight = 720;
+	std::string windowName = "RayCasting Examples";
 	const float pi = 3.14159265358979323846f;
 };
 
