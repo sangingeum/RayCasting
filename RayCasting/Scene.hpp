@@ -42,7 +42,7 @@ public:
 		return vertexArray;
 	}
 
-	sf::VertexArray createBoundary() {
+	sf::VertexArray createBoundaryVertices() {
 		sf::VertexArray vertexArray(sf::LineStrip, 4);
 		auto& config = GameConfig::instance();
 		vertexArray[0].position = sf::Vector2f(0, 0);
@@ -94,6 +94,30 @@ public:
 		auto circleVA = createCircleVertices(30, 50.f);
 		cRender = entity->addComponent<CRender>(circleVA);
 		cRender->states.transform.translate(800, 500);
+
+		// Make the boundary
+		auto boundaryVA = createBoundaryVertices();
+		entity = m_entityManager->addEntity();
+		cRender = entity->addComponent<CRender>(boundaryVA);
+	}
+
+	void addStationaryRayCaster() {
+		// Make a raycaster
+		auto entity = m_entityManager->addEntity();
+		auto circleVA = createCircleVertices(30, 10.f);
+		auto cRender = entity->addComponent<CRender>(circleVA);
+		cRender->states.transform.translate(GameConfig::instance().windowWidth / 2.f, GameConfig::instance().widowHeight / 2.f);
+		entity->addComponent<CRayCast>();
+	}
+
+	void addFollowingRayCaster(size_t numRays, bool drawTriangle, bool drawRay, bool sweep) {
+		// Make a raycaster
+		auto entity = m_entityManager->addEntity();
+		auto circleVA = createCircleVertices(30, 10.f);
+		auto cRender = entity->addComponent<CRender>(circleVA);
+		cRender->states.transform.translate(GameConfig::instance().windowWidth / 2.f, GameConfig::instance().widowHeight / 2.f);
+		entity->addComponent<CRayCast>(numRays, drawTriangle, drawRay, sweep);
+		entity->addComponent<CFlollowCursor>(true);
 	}
 
 };
@@ -102,19 +126,8 @@ class Scene1 : public Scene {
 
 public:
 	void init() override {
-		
 		baseInit();
-		// Make the boundary
-		auto boundaryVA = createBoundary();
-		auto entity = m_entityManager->addEntity();
-		auto cRender = entity->addComponent<CRender>(boundaryVA);
-		
-		// Make a raycaster
-		entity = m_entityManager->addEntity();
-		auto circleVA = createCircleVertices(30, 10.f);
-		cRender = entity->addComponent<CRender>(circleVA);
-		cRender->states.transform.translate(GameConfig::instance().windowWidth / 2.f, GameConfig::instance().widowHeight / 2.f);
-		entity->addComponent<CRayCast>();
+		addStationaryRayCaster();
 	}
 };
 
@@ -123,19 +136,8 @@ class Scene2 : public Scene {
 
 public:
 	void init() override {
-
 		baseInit();
-		// Make the boundary
-		auto boundaryVA = createBoundary();
-		auto entity = m_entityManager->addEntity();
-		auto cRender = entity->addComponent<CRender>(boundaryVA);
-		// Make a raycaster
-		entity = m_entityManager->addEntity();
-		auto circleVA = createCircleVertices(30, 10.f);
-		cRender = entity->addComponent<CRender>(circleVA);
-		cRender->states.transform.translate(GameConfig::instance().windowWidth / 2.f, GameConfig::instance().widowHeight / 2.f);
-		entity->addComponent<CRayCast>(static_cast<size_t>(30), false, true, false);
-		entity->addComponent<CFlollowCursor>(true);
+		addFollowingRayCaster(30, false, true, false);
 	}
 };
 
@@ -145,17 +147,7 @@ class Scene3 : public Scene {
 public:
 	void init() override {
 		baseInit();
-		// Make the boundary
-		auto boundaryVA = createBoundary();
-		auto entity = m_entityManager->addEntity();
-		auto cRender = entity->addComponent<CRender>(boundaryVA);
-		// Make a raycaster
-		entity = m_entityManager->addEntity();
-		auto circleVA = createCircleVertices(30, 10.f);
-		cRender = entity->addComponent<CRender>(circleVA);
-		cRender->states.transform.translate(GameConfig::instance().windowWidth / 2.f, GameConfig::instance().widowHeight / 2.f);
-		entity->addComponent<CRayCast>(static_cast<size_t>(30), true, true, false);
-		entity->addComponent<CFlollowCursor>(true);
+		addFollowingRayCaster(30, true, true, false);
 	}
 };
 
@@ -164,17 +156,7 @@ class Scene4 : public Scene {
 public:
 	void init() override {
 		baseInit();
-		// Make the boundary
-		auto boundaryVA = createBoundary();
-		auto entity = m_entityManager->addEntity();
-		auto cRender = entity->addComponent<CRender>(boundaryVA);
-		// Make a raycaster
-		entity = m_entityManager->addEntity();
-		auto circleVA = createCircleVertices(30, 10.f);
-		cRender = entity->addComponent<CRender>(circleVA);
-		cRender->states.transform.translate(GameConfig::instance().windowWidth / 2.f, GameConfig::instance().widowHeight / 2.f);
-		entity->addComponent<CRayCast>(static_cast<size_t>(30), true, true, true);
-		entity->addComponent<CFlollowCursor>(true);
+		addFollowingRayCaster(30, true, true, true);
 	}
 };
 
@@ -183,16 +165,6 @@ class Scene5 : public Scene {
 public:
 	void init() override {
 		baseInit();
-		// Make the boundary
-		auto boundaryVA = createBoundary();
-		auto entity = m_entityManager->addEntity();
-		auto cRender = entity->addComponent<CRender>(boundaryVA);
-		// Make a raycaster
-		entity = m_entityManager->addEntity();
-		auto circleVA = createCircleVertices(30, 10.f);
-		cRender = entity->addComponent<CRender>(circleVA);
-		cRender->states.transform.translate(GameConfig::instance().windowWidth / 2.f, GameConfig::instance().widowHeight / 2.f);
-		entity->addComponent<CRayCast>(static_cast<size_t>(30), true, false, true);
-		entity->addComponent<CFlollowCursor>(true);
+		addFollowingRayCaster(30, true, false, true);
 	}
 };
