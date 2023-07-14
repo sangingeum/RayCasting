@@ -8,10 +8,7 @@ class GameConfig
 	void operator=(const GameConfig&) = delete;
 	~GameConfig() = default;
 public:
-	static GameConfig& instance() {
-		static GameConfig config;
-		return config;
-	}
+	static GameConfig& instance();
 	unsigned frameRate = 144;
 	int windowWidth = 1280;
 	int widowHeight = 720;
