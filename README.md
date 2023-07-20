@@ -14,6 +14,8 @@ Please refer to the following page for instructions on how to set up your enviro
 [```SFML Visual Studio Setup Tutorial```](https://www.sfml-dev.org/tutorials/2.6/start-vc.php)
 
 ## How to Use
+Download the ```RayCasting.exe``` file in the repository and execute it.
+
 You can switch between fives different scenes by clicking the designated keys:
 * Scene 1 (Stationary Ray Caster) : 1 key
 * Scene 2 (Radial Ray Caster) : 2 key
