@@ -4,8 +4,9 @@
 #include "GameSystem.hpp"
 #include <cmath>
 
-int main()
+int WinMain()
 {  
+    // Run the system
     GameSystem system;
     system.run();
     return 0;
